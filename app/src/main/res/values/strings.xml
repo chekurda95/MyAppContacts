@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MyAppContacts</string>
+    <string name="first_name">Имя</string>
+    <string name="last_name">Фамилия</string>
+    <string name="company_name">Компания</string>
+    <string name="telephone_number">Телефон</string>
+</resources>
