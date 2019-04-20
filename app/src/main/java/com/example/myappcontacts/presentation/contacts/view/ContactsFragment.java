@@ -7,6 +7,9 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -25,7 +28,7 @@ import butterknife.Unbinder;
 
 
 public class ContactsFragment extends MvpAppCompatFragment implements IContactsView {
-    private static final String CONTACT_ID = "contactId";
+    private static final String ARG_CONTACT_ID = "contactId";
 
     private UUID mContactId;
     private ContactsModel mContactsModel;
@@ -52,9 +55,9 @@ public class ContactsFragment extends MvpAppCompatFragment implements IContactsV
         return fragment;
     }
 
-    public Fragment newInstance(UUID contactId) {
+    public static Fragment newInstance(UUID contactId) {
         Bundle args = new Bundle();
-        args.putSerializable(CONTACT_ID, contactId);
+        args.putSerializable(ARG_CONTACT_ID, contactId);
 
         ContactsFragment fragment = new ContactsFragment();
         fragment.setArguments(args);
@@ -65,7 +68,7 @@ public class ContactsFragment extends MvpAppCompatFragment implements IContactsV
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mContactId = (UUID) getArguments().getSerializable(CONTACT_ID);
+            mContactId = (UUID) getArguments().getSerializable(ARG_CONTACT_ID);
         }
     }
 
@@ -78,8 +81,7 @@ public class ContactsFragment extends MvpAppCompatFragment implements IContactsV
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mUnbinder = ButterKnife.bind(this, view);
-
-        mContactId = UUID.fromString("550e8400-e29b-41d4-a716-446655440000");/////////////////////test
+        setHasOptionsMenu(true);
 
         mContactsPresenter.loadContact(mContactId);
 
@@ -160,7 +162,17 @@ public class ContactsFragment extends MvpAppCompatFragment implements IContactsV
 
             }
         });
+    }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_contacts_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

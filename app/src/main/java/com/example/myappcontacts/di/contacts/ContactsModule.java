@@ -3,8 +3,8 @@ package com.example.myappcontacts.di.contacts;
 import com.example.myappcontacts.business.contact.ContactsInteractor;
 import com.example.myappcontacts.business.contact.IContactsInteractor;
 import com.example.myappcontacts.data.providers.database.IDataBaseProvider;
-import com.example.myappcontacts.data.repositories.Contacts.ContactsRepository;
-import com.example.myappcontacts.data.repositories.Contacts.IContactsRepository;
+import com.example.myappcontacts.data.repositories.contacts.ContactsRepository;
+import com.example.myappcontacts.data.repositories.contacts.IContactsRepository;
 
 import dagger.Module;
 import dagger.Provides;

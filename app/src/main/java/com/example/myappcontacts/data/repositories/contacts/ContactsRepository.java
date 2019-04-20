@@ -1,4 +1,4 @@
-package com.example.myappcontacts.data.repositories.Contacts;
+package com.example.myappcontacts.data.repositories.contacts;
 
 import com.example.myappcontacts.data.dao.contacts.db.ContactsModel;
 import com.example.myappcontacts.data.providers.database.IDataBaseProvider;

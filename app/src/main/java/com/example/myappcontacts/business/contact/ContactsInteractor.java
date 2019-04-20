@@ -1,7 +1,7 @@
 package com.example.myappcontacts.business.contact;
 
 import com.example.myappcontacts.data.dao.contacts.db.ContactsModel;
-import com.example.myappcontacts.data.repositories.Contacts.IContactsRepository;
+import com.example.myappcontacts.data.repositories.contacts.IContactsRepository;
 
 import java.util.UUID;
 

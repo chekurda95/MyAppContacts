@@ -7,11 +7,12 @@ import com.example.myappcontacts.data.dao.contacts.db.ContactsModel;
 import com.example.myappcontacts.data.providers.database.databaseutils.ContactsBaseHelper;
 import com.example.myappcontacts.data.providers.database.databaseutils.ContactsCursorWrapper;
 import com.example.myappcontacts.data.providers.database.databaseutils.Queries;
-import com.example.myappcontacts.di.contacts.ContactsModule;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-import static com.example.myappcontacts.data.providers.database.databaseutils.ContactsDbSchema.*;
+import static com.example.myappcontacts.data.providers.database.databaseutils.ContactsDbSchema.ContactsTable;
 
 public class MyStorIOSQLite implements IMyStorIOSQLite {
 
@@ -22,9 +23,11 @@ public class MyStorIOSQLite implements IMyStorIOSQLite {
     }
 
     @Override
-    public void addContact(ContactsModel contactsModel) {
+    public UUID addContact() {
+        ContactsModel contactsModel = new ContactsModel();
         ContentValues values = Queries.getContentValues(contactsModel);
         mDb.insert(ContactsTable.NAME, null, values);
+        return contactsModel.getContactId();
     }
 
     @Override
@@ -52,6 +55,27 @@ public class MyStorIOSQLite implements IMyStorIOSQLite {
         } finally {
             cursor.close();
         }
+    }
+
+    @Override
+    public List<ContactsModel> getContactsList() {
+        ContactsCursorWrapper cursor = Queries.queryContacts(mDb,
+                null,
+                null);
+        List<ContactsModel> contactsList = new ArrayList<>();
+        try{
+            if(cursor.getCount() == 0){
+                return null;
+            }
+            cursor.moveToFirst();
+            while(!cursor.isAfterLast()){
+                contactsList.add(cursor.getContactsModel());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+        return contactsList;
     }
 
     @Override

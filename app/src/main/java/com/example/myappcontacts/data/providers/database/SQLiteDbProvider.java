@@ -3,6 +3,7 @@ package com.example.myappcontacts.data.providers.database;
 import com.example.myappcontacts.data.dao.contacts.db.ContactsModel;
 import com.example.myappcontacts.data.providers.database.MyStorIOSQLite.IMyStorIOSQLite;
 
+import java.util.List;
 import java.util.UUID;
 
 import io.reactivex.Completable;
@@ -17,8 +18,8 @@ public class SQLiteDbProvider implements IDataBaseProvider{
     }
 
     @Override
-    public Completable saveContact(ContactsModel contactsModel) {
-        return Completable.fromAction(() -> mDataBase.addContact(contactsModel));
+    public Single<UUID> addContact() {
+        return Single.fromCallable(() -> mDataBase.addContact());
     }
 
     @Override
@@ -29,6 +30,11 @@ public class SQLiteDbProvider implements IDataBaseProvider{
     @Override
     public Single<ContactsModel> loadContact(UUID contactId) {
         return Single.fromCallable(() -> mDataBase.getContact(contactId));
+    }
+
+    @Override
+    public Single<List<ContactsModel>> loadContactsList() {
+        return Single.fromCallable(() -> mDataBase.getContactsList());
     }
 
     @Override
