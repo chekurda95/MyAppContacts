@@ -26,10 +26,10 @@ public class ContactsCursorWrapper extends CursorWrapper {
 
         //Создаем модель
         ContactsModel contactsModel = new ContactsModel(UUID.fromString(uuidString));
-        contactsModel.setFirstName(firstName);
-        contactsModel.setLastName(lastName);
-        contactsModel.setCompanyName(companyName);
-        contactsModel.setTelNumber(telNumber);
+        contactsModel.setFirstName(firstName != null ? firstName : "");
+        contactsModel.setLastName(lastName != null ? lastName : "");
+        contactsModel.setCompanyName(companyName != null ? companyName : "");
+        contactsModel.setTelNumber(telNumber != null ? telNumber : "");
 
         return contactsModel;
     }

@@ -1,5 +1,7 @@
 package com.example.myappcontacts.presentation.contactslist.presenter;
 
+import android.view.View;
+
 import java.util.UUID;
 
 public interface IContactsListPresenter {

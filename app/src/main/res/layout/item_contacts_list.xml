@@ -5,18 +5,28 @@
     android:layout_height="wrap_content"
     style="?android:listSeparatorTextViewStyle">
 
-    <ImageView
-        android:id="@+id/contact_photo"
+    <FrameLayout
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:id="@+id/photo_holder"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:contentDescription="@string/last_name"
+        android:background="@drawable/photo_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/ic_contact_photo" />
+        android:src="@drawable/ic_contact_photo">
+
+        <ImageView
+            android:id="@+id/contact_photo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/last_name"
+            android:src="@drawable/ic_contact_photo"/>
+    </FrameLayout>
+
 
     <TextView
         android:id="@+id/contact_name"
@@ -31,12 +41,12 @@
         android:gravity="center|start"
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/contact_telephone"
-        app:layout_constraintStart_toEndOf="@id/contact_photo"
+        app:layout_constraintEnd_toStartOf="@id/contact_have_telephone"
+        app:layout_constraintStart_toEndOf="@id/photo_holder"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/contact_telephone"
+        android:id="@+id/contact_have_telephone"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginEnd="16dp"

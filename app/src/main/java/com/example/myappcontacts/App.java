@@ -10,6 +10,7 @@ import com.example.myappcontacts.di.contacts.ContactsComponent;
 import com.example.myappcontacts.di.contacts.ContactsModule;
 import com.example.myappcontacts.di.contactslist.ContactsListComponent;
 import com.example.myappcontacts.di.contactslist.ContactsListModule;
+import com.facebook.drawee.backends.pipeline.Fresco;
 
 public class App extends Application {
     private static App mApp;
@@ -29,6 +30,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fresco.initialize(this);
         mAppComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
                 .build();

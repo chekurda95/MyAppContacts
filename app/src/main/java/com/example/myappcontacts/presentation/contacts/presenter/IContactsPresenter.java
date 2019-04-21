@@ -7,5 +7,5 @@ import java.util.UUID;
 public interface IContactsPresenter {
     void loadContact(UUID contactId);
     void updateContact(ContactsModel contactsModel);
-    void onBackToContactsList();
+    void onEditSaveButtonClicked();
 }

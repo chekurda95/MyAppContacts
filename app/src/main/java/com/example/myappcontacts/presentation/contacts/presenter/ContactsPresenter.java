@@ -15,6 +15,7 @@ import java.util.UUID;
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 @InjectViewState
@@ -25,6 +26,8 @@ public class ContactsPresenter extends MvpPresenter<IContactsView> implements IC
     @Inject
     IContactsInteractor mContactsInteractor;
 
+    private CompositeDisposable mDisposer = new CompositeDisposable();
+    private boolean mSaveButtonActive;
     private ContactsModel mContactsModel;
 
     public ContactsPresenter(){
@@ -33,10 +36,15 @@ public class ContactsPresenter extends MvpPresenter<IContactsView> implements IC
 
     @Override
     public void loadContact(UUID contactId) {
-        mContactsInteractor.loadContact(contactId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onSuccess, this::onError);
+        if(mContactsModel==null) {
+            Log.i("MY_TAG2", "loadContact сработал");
+            mDisposer.add(mContactsInteractor.loadContact(contactId)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(this::onSuccess, this::onError));
+        } else {
+            getViewState().updateUI(mContactsModel,mSaveButtonActive);
+        }
     }
 
     private void onError(Throwable throwable) {
@@ -44,31 +52,45 @@ public class ContactsPresenter extends MvpPresenter<IContactsView> implements IC
     }
 
     private void onSuccess(ContactsModel contactsModel){
-        if(getViewState()!=null) {
-            mContactsModel = contactsModel;
-            getViewState().showContact(contactsModel);
+        if(contactsModel.getTelNumber().equals("")){
+            mSaveButtonActive = true;
+            getViewState().updateUI(contactsModel, true);
+        } else {
+            mSaveButtonActive = false;
+            getViewState().updateUI(contactsModel, false);
         }
+        mContactsModel = contactsModel;
     }
 
     @Override
     public void updateContact(ContactsModel contactsModel) {
-        mContactsInteractor.updateContact(contactsModel)
+        mContactsModel = contactsModel;
+        mSaveButtonActive = !mSaveButtonActive;
+        getViewState().updateUI(contactsModel, mSaveButtonActive);
+        mDisposer.add(mContactsInteractor.updateContact(contactsModel)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onUpdate, this::onError);
+                .subscribe(this::onUpdate, this::onError));
     }
 
     private void onUpdate(){
-        Log.e(TAG, mContactsModel.getLastName() + " was updated successful");
+        Log.i(TAG, " - контакт был успешно обновлен");
     }
 
-
     @Override
-    public void onBackToContactsList() {
+    public void onEditSaveButtonClicked() {
+        if(mSaveButtonActive){
+            getViewState().updateContact();
+        } else {
+            mSaveButtonActive = !mSaveButtonActive;
+            getViewState().updateUI(mContactsModel, mSaveButtonActive);
+        }
+
     }
 
     @Override
     public void onDestroy() {
+        mDisposer.dispose();
         App.get().clearContactsComponent();
         super.onDestroy();
     }
