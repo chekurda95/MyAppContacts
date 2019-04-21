@@ -28,7 +28,7 @@ public class ContactsListPresenter extends MvpPresenter<IContactsListView> imple
     @Inject
     IContactsListInteractor mContactsListInteractor;
 
-    public ContactsListPresenter(){
+    public ContactsListPresenter() {
         App.get().plusContactsListComponent(new ContactsListModule()).inject(this);
     }
 
@@ -41,11 +41,11 @@ public class ContactsListPresenter extends MvpPresenter<IContactsListView> imple
                 .subscribe(this::onAddSuccess, this::onError));
     }
 
-    private void onAddSuccess(UUID contactId){
+    private void onAddSuccess(UUID contactId) {
         getViewState().openContact(contactId);
     }
 
-    private void onError(Throwable throwable){
+    private void onError(Throwable throwable) {
         Log.e(TAG, getClass().getSimpleName() + "onError " + throwable);
     }
 
@@ -57,7 +57,7 @@ public class ContactsListPresenter extends MvpPresenter<IContactsListView> imple
                 .subscribe(this::onDeleteSuccess, this::onError));
     }
 
-    private void onDeleteSuccess(){
+    private void onDeleteSuccess() {
         Log.i(TAG, getClass().getSimpleName() + " contact deleted");
     }
 
@@ -69,13 +69,13 @@ public class ContactsListPresenter extends MvpPresenter<IContactsListView> imple
                 .subscribe(this::onLoadSuccess, this::onError));
     }
 
-    private void onLoadSuccess(List<ContactsModel> contactsList){
+    private void onLoadSuccess(List<ContactsModel> contactsList) {
         Log.i("MY_TAG", getClass().getSimpleName() + " onLoadSuccess сработал " + contactsList.size());
         getViewState().updateContactsList(contactsList);
     }
 
     @Override
-    public void onContactItemClicked(UUID contactId){
+    public void onContactItemClicked(UUID contactId) {
         getViewState().openContact(contactId);
     }
 

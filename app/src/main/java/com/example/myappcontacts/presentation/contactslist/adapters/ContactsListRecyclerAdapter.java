@@ -77,13 +77,13 @@ public class ContactsListRecyclerAdapter extends RecyclerView.Adapter<ContactsLi
             mContactId = contactsModel.getContactId();
             String firstName = contactsModel.getFirstName();
             String lastName = contactsModel.getLastName();
-            if(firstName.equals("") && lastName.equals("")){
+            if (firstName.equals("") && lastName.equals("")) {
                 mContactNameTextView.setText(R.string.no_name);
             } else {
                 String fullName = lastName + " " + firstName;
                 mContactNameTextView.setText(fullName.trim());
             }
-            if(contactsModel.getTelNumber().equals("")){
+            if (contactsModel.getTelNumber().equals("")) {
                 mContactTelephone.setVisibility(ImageView.GONE);
             } else {
                 mContactTelephone.setVisibility(ImageView.VISIBLE);

@@ -1,7 +1,6 @@
 package com.example.myappcontacts;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.example.myappcontacts.di.application.AppComponent;
 import com.example.myappcontacts.di.application.AppModule;

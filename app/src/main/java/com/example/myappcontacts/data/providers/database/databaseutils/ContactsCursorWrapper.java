@@ -12,7 +12,7 @@ import static com.example.myappcontacts.data.providers.database.databaseutils.Co
 //Обертка курсора
 public class ContactsCursorWrapper extends CursorWrapper {
 
-    public ContactsCursorWrapper(Cursor cursor) {
+    ContactsCursorWrapper(Cursor cursor) {
         super(cursor);
     }
 

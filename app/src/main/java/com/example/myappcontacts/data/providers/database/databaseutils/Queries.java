@@ -11,7 +11,7 @@ import static com.example.myappcontacts.data.providers.database.databaseutils.Co
 //настройка курсора и модели
 public class Queries {
 
-    public static ContactsCursorWrapper queryContacts(SQLiteDatabase db, String whereClause, String[] whereArgs){
+    public static ContactsCursorWrapper queryContacts(SQLiteDatabase db, String whereClause, String[] whereArgs) {
         Cursor cursor = db.query(
                 ContactsTable.NAME,
                 null,
@@ -23,7 +23,7 @@ public class Queries {
         return new ContactsCursorWrapper(cursor);
     }
 
-    public static ContentValues getContentValues(ContactsModel contactsModel){
+    public static ContentValues getContentValues(ContactsModel contactsModel) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(ContactsTable.Cols.UUID, contactsModel.getContactId().toString());
         contentValues.put(ContactsTable.Cols.FIRST_NAME, contactsModel.getFirstName());

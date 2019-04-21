@@ -9,11 +9,11 @@ import java.util.UUID;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 
-public class SQLiteDbProvider implements IDataBaseProvider{
+public class SQLiteDbProvider implements IDataBaseProvider {
 
     private IMyStorIOSQLite mDataBase;
 
-    public SQLiteDbProvider(IMyStorIOSQLite dataBase){
+    public SQLiteDbProvider(IMyStorIOSQLite dataBase) {
         mDataBase = dataBase;
     }
 

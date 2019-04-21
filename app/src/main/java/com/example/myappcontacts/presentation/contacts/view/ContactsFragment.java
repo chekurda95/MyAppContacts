@@ -2,10 +2,8 @@ package com.example.myappcontacts.presentation.contacts.view;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -145,8 +142,8 @@ public class ContactsFragment extends MvpAppCompatFragment implements IContactsV
         mTelNumberEditText.setText(contactsModel.getTelNumber());
     }
 
-    private void updateMenuUI(boolean edit){
-        if(mEdit_Save_Button!=null) {
+    private void updateMenuUI(boolean edit) {
+        if (mEdit_Save_Button != null) {
             if (!edit) {
                 mEdit_Save_Button.setTitle(R.string.edit_contact);
                 mEdit_Save_Button.setIcon(getResources().getDrawable(R.drawable.ic_edit_contact));
@@ -177,7 +174,7 @@ public class ContactsFragment extends MvpAppCompatFragment implements IContactsV
 
     @Override
     public void updateContact() {
-        if(mTelNumberEditText.getText().toString().equals("")){
+        if (mTelNumberEditText.getText().toString().equals("")) {
             mTelNumberEditText.setHintTextColor(Color.RED);
         } else {
             ContactsModel contactsModel = new ContactsModel(mContactId);

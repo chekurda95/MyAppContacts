@@ -30,20 +30,20 @@ public class ContactsPresenter extends MvpPresenter<IContactsView> implements IC
     private boolean mSaveButtonActive;
     private ContactsModel mContactsModel;
 
-    public ContactsPresenter(){
+    public ContactsPresenter() {
         App.get().plusContactsComponent(new ContactsModule()).inject(this);
     }
 
     @Override
     public void loadContact(UUID contactId) {
-        if(mContactsModel==null) {
+        if (mContactsModel == null) {
             Log.i("MY_TAG2", "loadContact сработал");
             mDisposer.add(mContactsInteractor.loadContact(contactId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::onSuccess, this::onError));
         } else {
-            getViewState().updateUI(mContactsModel,mSaveButtonActive);
+            getViewState().updateUI(mContactsModel, mSaveButtonActive);
         }
     }
 
@@ -51,8 +51,8 @@ public class ContactsPresenter extends MvpPresenter<IContactsView> implements IC
         Log.e(TAG, getClass().getSimpleName() + " onError" + throwable);
     }
 
-    private void onSuccess(ContactsModel contactsModel){
-        if(contactsModel.getTelNumber().equals("")){
+    private void onSuccess(ContactsModel contactsModel) {
+        if (contactsModel.getTelNumber().equals("")) {
             mSaveButtonActive = true;
             getViewState().updateUI(contactsModel, true);
         } else {
@@ -73,13 +73,13 @@ public class ContactsPresenter extends MvpPresenter<IContactsView> implements IC
                 .subscribe(this::onUpdate, this::onError));
     }
 
-    private void onUpdate(){
+    private void onUpdate() {
         Log.i(TAG, " - контакт был успешно обновлен");
     }
 
     @Override
     public void onEditSaveButtonClicked() {
-        if(mSaveButtonActive){
+        if (mSaveButtonActive) {
             getViewState().updateContact();
         } else {
             mSaveButtonActive = !mSaveButtonActive;

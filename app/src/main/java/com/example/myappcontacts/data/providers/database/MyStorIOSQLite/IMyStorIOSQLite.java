@@ -7,8 +7,12 @@ import java.util.UUID;
 
 public interface IMyStorIOSQLite {
     UUID addContact();
+
     void updateContact(ContactsModel contactsModel);
+
     ContactsModel getContact(UUID contactId);
+
     List<ContactsModel> getContactsList();
+
     void deleteContact(UUID contactId);
 }

@@ -63,12 +63,12 @@ public class MyStorIOSQLite implements IMyStorIOSQLite {
                 null,
                 null);
         List<ContactsModel> contactsList = new ArrayList<>();
-        try{
-            if(cursor.getCount() == 0){
+        try {
+            if (cursor.getCount() == 0) {
                 return null;
             }
             cursor.moveToFirst();
-            while(!cursor.isAfterLast()){
+            while (!cursor.isAfterLast()) {
                 contactsList.add(cursor.getContactsModel());
                 cursor.moveToNext();
             }
