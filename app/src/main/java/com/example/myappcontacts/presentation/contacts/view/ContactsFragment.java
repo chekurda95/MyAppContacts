@@ -120,8 +120,6 @@ public class ContactsFragment extends MvpAppCompatFragment implements IContactsV
 
     @Override
     public void updateUI(ContactsModel contactsModel, boolean edit) {
-        Log.i("MY_TAG2", "updateUI сработал");
-
         updateMenuUI(edit);
         visibilityEdit(edit);
         if (edit) {
@@ -139,13 +137,8 @@ public class ContactsFragment extends MvpAppCompatFragment implements IContactsV
         View[] textViews = {mTextViews, mTelNumberTextView, mAddressTextView};
         int editViewVisibility = edit ? View.VISIBLE : View.GONE;
         int textViewVisibility = edit ? View.GONE : View.VISIBLE;
-        for (View editView : editViews) {
-            editView.setVisibility(editViewVisibility);
-        }
-        for (View textView :
-                textViews) {
-            textView.setVisibility(textViewVisibility);
-        }
+        for (View editView : editViews) {editView.setVisibility(editViewVisibility);}
+        for (View textView : textViews) {textView.setVisibility(textViewVisibility); }
     }
 
     private void showContact(ContactsModel contactsModel) {
