@@ -2,8 +2,6 @@ package com.example.myappcontacts.presentation.contactslist.view;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,7 +25,6 @@ import com.example.myappcontacts.presentation.contactslist.adapters.ContactsList
 import com.example.myappcontacts.presentation.contactslist.adapters.SimpleItemTouchHelperCallback;
 import com.example.myappcontacts.presentation.contactslist.presenter.ContactsListPresenter;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -120,7 +117,7 @@ public class ContactsListFragment extends MvpAppCompatFragment implements IConta
 
     @Override
     public void onItemSwipe(UUID contactId) {
-        deleteContact(contactId);
+        mContactsListPresenter.onItemSwiped(contactId);
     }
 
     @Override
@@ -131,8 +128,8 @@ public class ContactsListFragment extends MvpAppCompatFragment implements IConta
     }
 
     @Override
-    public void openMap(){
-        if(hasLocationPermission()){
+    public void openMap() {
+        if (hasLocationPermission()) {
             NavHostFragment.findNavController(this).navigate(R.id.contactsMapFragment);
         } else {
             requestPermissions();
@@ -140,7 +137,7 @@ public class ContactsListFragment extends MvpAppCompatFragment implements IConta
     }
 
     private void requestPermissions() {
-        String [] LOCATION_PERMISSIONS = new String[]{
+        String[] LOCATION_PERMISSIONS = new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION};
         requestPermissions(LOCATION_PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE);
     }
@@ -152,13 +149,14 @@ public class ContactsListFragment extends MvpAppCompatFragment implements IConta
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode){
+        switch (requestCode) {
             case LOCATION_PERMISSION_REQUEST_CODE:
-                if(hasLocationPermission()){
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     openMap();
+                    break;
                 }
-                default:
-                    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 

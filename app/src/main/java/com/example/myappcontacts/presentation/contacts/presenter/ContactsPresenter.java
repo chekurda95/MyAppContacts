@@ -1,6 +1,5 @@
 package com.example.myappcontacts.presentation.contacts.presenter;
 
-import android.net.Uri;
 import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
@@ -15,9 +14,7 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 @InjectViewState
 public class ContactsPresenter extends MvpPresenter<IContactsView> implements IContactsPresenter {
@@ -32,16 +29,15 @@ public class ContactsPresenter extends MvpPresenter<IContactsView> implements IC
     private ContactsModel mContactsModel;
 
     public ContactsPresenter() {
-        App.get().plusContactsComponent(new ContactsModule()).inject(this);
+        App.get().plusContactsModule(new ContactsModule()).inject(this);
     }
 
     @Override
     public void loadContact(UUID contactId) {
         if (mContactsModel == null) {
             Log.i("MY_TAG2", "loadContact сработал");
-            mDisposer.add(mContactsInteractor.loadContact(contactId)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+            mDisposer.add(
+                    mContactsInteractor.loadContact(contactId)
                     .subscribe(this::onSuccess, this::onError));
         } else {
             getViewState().updateUI(mContactsModel, mSaveButtonActive);
@@ -68,12 +64,13 @@ public class ContactsPresenter extends MvpPresenter<IContactsView> implements IC
         if(contactsModel.getPhotoUri() == null && mContactsModel.getPhotoUri()!=null){
             contactsModel.setPhotoUri(mContactsModel.getPhotoUri());
         }
+
         mContactsModel = contactsModel;
         mSaveButtonActive = !mSaveButtonActive;
+
         getViewState().updateUI(contactsModel, mSaveButtonActive);
-        mDisposer.add(mContactsInteractor.updateContact(contactsModel)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+        mDisposer.add(
+                mContactsInteractor.updateContact(contactsModel)
                 .subscribe(this::onUpdate, this::onError));
     }
 

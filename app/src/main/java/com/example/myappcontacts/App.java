@@ -42,21 +42,21 @@ public class App extends Application {
         return mAppComponent;
     }
 
-    public ContactsComponent plusContactsComponent(ContactsModule contactsModule) {
+    public ContactsComponent plusContactsModule(ContactsModule contactsModule) {
         if (mContactsComponent == null) {
             mContactsComponent = getAppComponent().plus(contactsModule);
         }
         return mContactsComponent;
     }
 
-    public ContactsListComponent plusContactsListComponent(ContactsListModule contactsListModule) {
+    public ContactsListComponent plusContactsListModule(ContactsListModule contactsListModule) {
         if (mContactsListComponent == null) {
             mContactsListComponent = getAppComponent().plus(contactsListModule);
         }
         return mContactsListComponent;
     }
 
-    public ContactsMapComponent plusContactsMapComponent(ContactsMapModule contactsMapModule) {
+    public ContactsMapComponent plusContactsMapModule(ContactsMapModule contactsMapModule) {
         if (mContactsMapComponent == null) {
             mContactsMapComponent = getAppComponent().plus(contactsMapModule);
         }

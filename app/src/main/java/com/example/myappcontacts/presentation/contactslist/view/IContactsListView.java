@@ -1,6 +1,7 @@
 package com.example.myappcontacts.presentation.contactslist.view;
 
 import com.arellomobile.mvp.MvpView;
+import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy;
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 import com.example.myappcontacts.data.dao.contacts.db.ContactsModel;
@@ -13,6 +14,7 @@ public interface IContactsListView extends MvpView {
 
     void addContact();
 
+    @StateStrategyType(OneExecutionStateStrategy.class)
     void deleteContact(UUID contactId);
 
     void updateContactsList(List<ContactsModel> contactsList);

@@ -9,6 +9,8 @@ public interface IContactsListPresenter {
 
     void loadContactsList();
 
+    void onItemSwiped(UUID contactId);
+
     void onContactItemClicked(UUID contactsId);
 
     void onShowContactsMapClicked();

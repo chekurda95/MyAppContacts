@@ -6,6 +6,8 @@ import com.example.myappcontacts.data.repositories.contactsmap.IContactsMapRepos
 import java.util.List;
 
 import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class ContactsMapInteractor implements IContactsMapInteractor {
 
@@ -17,6 +19,8 @@ public class ContactsMapInteractor implements IContactsMapInteractor {
 
     @Override
     public Single<List<MapMarkersModel>> loadMapMarkersList() {
-        return mIContactsMapRepository.loadMapMarkersList();
+        return mIContactsMapRepository.loadMapMarkersList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }

@@ -123,27 +123,28 @@ public class ContactsFragment extends MvpAppCompatFragment implements IContactsV
         Log.i("MY_TAG2", "updateUI сработал");
 
         updateMenuUI(edit);
-
+        visibilityEdit(edit);
         if (edit) {
-            mTextViews.setVisibility(View.GONE);
-            mEditTexts.setVisibility(View.VISIBLE);
-            mTelNumberTextView.setVisibility(View.GONE);
-            mTelNumberEditText.setVisibility(View.VISIBLE);
-            mAddressTextView.setVisibility(View.GONE);
-            mAddressEditText.setVisibility(View.VISIBLE);
             editContact(contactsModel);
         } else {
-            mTextViews.setVisibility(View.VISIBLE);
-            mEditTexts.setVisibility(View.GONE);
-            mTelNumberTextView.setVisibility(View.VISIBLE);
-            mTelNumberEditText.setVisibility(View.GONE);
-            mAddressTextView.setVisibility(View.VISIBLE);
-            mAddressEditText.setVisibility(View.GONE);
             showContact(contactsModel);
         }
-
         if (contactsModel.getPhotoUri() != null) {
             mPhotoImage.setImageURI(Uri.parse(contactsModel.getPhotoUri()));
+        }
+    }
+
+    private void visibilityEdit(boolean edit) {
+        View[] editViews = {mEditTexts, mTelNumberEditText, mAddressEditText};
+        View[] textViews = {mTextViews, mTelNumberTextView, mAddressTextView};
+        int editViewVisibility = edit ? View.VISIBLE : View.GONE;
+        int textViewVisibility = edit ? View.GONE : View.VISIBLE;
+        for (View editView : editViews) {
+            editView.setVisibility(editViewVisibility);
+        }
+        for (View textView :
+                textViews) {
+            textView.setVisibility(textViewVisibility);
         }
     }
 

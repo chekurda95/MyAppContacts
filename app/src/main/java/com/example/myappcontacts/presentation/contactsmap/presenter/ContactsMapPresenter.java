@@ -17,9 +17,7 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 @InjectViewState
 public class ContactsMapPresenter extends MvpPresenter<IContactsMapView> implements IContactsMapPresenter {
@@ -31,7 +29,7 @@ public class ContactsMapPresenter extends MvpPresenter<IContactsMapView> impleme
     IContactsMapInteractor mIContactsMapInteractor;
 
     public ContactsMapPresenter() {
-        App.get().plusContactsMapComponent(new ContactsMapModule()).inject(this);
+        App.get().plusContactsMapModule(new ContactsMapModule()).inject(this);
     }
 
     @Override
@@ -43,8 +41,6 @@ public class ContactsMapPresenter extends MvpPresenter<IContactsMapView> impleme
     private void loadMarkersList() {
         mDisposer.add(
                 mIContactsMapInteractor.loadMapMarkersList()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(this::onLoadSuccess, this::onLoadError));
     }
 

@@ -8,6 +8,8 @@ import java.util.UUID;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class ContactsListInteractor implements IContactsListInteractor {
 
@@ -24,11 +26,15 @@ public class ContactsListInteractor implements IContactsListInteractor {
 
     @Override
     public Completable deleteContact(UUID contactId) {
-        return mContactsListRepository.deleteContact(contactId);
+        return mContactsListRepository.deleteContact(contactId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
     public Single<List<ContactsModel>> loadContactsList() {
-        return mContactsListRepository.loadContactsList();
+        return mContactsListRepository.loadContactsList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }
