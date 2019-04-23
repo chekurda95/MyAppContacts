@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import static com.example.myappcontacts.data.providers.database.databaseutils.ContactsDbSchema.*;
+import static com.example.myappcontacts.data.providers.database.databaseutils.ContactsDbSchema.ContactsTable;
 
 public class ContactsBaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "contactsBase.db";
@@ -23,7 +23,9 @@ public class ContactsBaseHelper extends SQLiteOpenHelper {
                 ContactsTable.Cols.FIRST_NAME + ", " +
                 ContactsTable.Cols.LAST_NAME + ", " +
                 ContactsTable.Cols.COMPANY_NAME + ", " +
-                ContactsTable.Cols.TEL_NUMBER +
+                ContactsTable.Cols.TEL_NUMBER + ", " +
+                ContactsTable.Cols.PHOTO_URI + ", " +
+                ContactsTable.Cols.ADDRESS +
                 ")"
         );
     }

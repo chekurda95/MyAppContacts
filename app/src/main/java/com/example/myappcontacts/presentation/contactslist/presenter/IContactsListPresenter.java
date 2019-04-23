@@ -10,4 +10,6 @@ public interface IContactsListPresenter {
     void loadContactsList();
 
     void onContactItemClicked(UUID contactsId);
+
+    void onShowContactsMapClicked();
 }

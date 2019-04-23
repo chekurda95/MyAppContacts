@@ -17,25 +17,25 @@ import dagger.Provides;
 public class AppModule {
     private final Context mContext;
 
-    public AppModule(Context context){
+    public AppModule(Context context) {
         mContext = context;
     }
 
     @Provides
     @Singleton
-    Context provideContext(){
+    Context provideContext() {
         return mContext;
     }
 
     @Provides
     @Singleton
-    IMyStorIOSQLite provideMyStorIOSQLite(Context context){
+    IMyStorIOSQLite provideMyStorIOSQLite(Context context) {
         return new MyStorIOSQLite(new ContactsBaseHelper(context));
     }
 
     @Provides
     @Singleton
-    IDataBaseProvider provideDateBaseProvider(IMyStorIOSQLite myStorIOSQLite){
+    IDataBaseProvider provideDateBaseProvider(IMyStorIOSQLite myStorIOSQLite) {
         return new SQLiteDbProvider(myStorIOSQLite);
     }
 

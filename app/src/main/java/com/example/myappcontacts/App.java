@@ -9,6 +9,8 @@ import com.example.myappcontacts.di.contacts.ContactsComponent;
 import com.example.myappcontacts.di.contacts.ContactsModule;
 import com.example.myappcontacts.di.contactslist.ContactsListComponent;
 import com.example.myappcontacts.di.contactslist.ContactsListModule;
+import com.example.myappcontacts.di.contactsmap.ContactsMapComponent;
+import com.example.myappcontacts.di.contactsmap.ContactsMapModule;
 import com.facebook.drawee.backends.pipeline.Fresco;
 
 public class App extends Application {
@@ -17,6 +19,7 @@ public class App extends Application {
 
     private ContactsComponent mContactsComponent;
     private ContactsListComponent mContactsListComponent;
+    private ContactsMapComponent mContactsMapComponent;
 
     public App() {
         mApp = this;
@@ -53,12 +56,23 @@ public class App extends Application {
         return mContactsListComponent;
     }
 
+    public ContactsMapComponent plusContactsMapComponent(ContactsMapModule contactsMapModule) {
+        if (mContactsMapComponent == null) {
+            mContactsMapComponent = getAppComponent().plus(contactsMapModule);
+        }
+        return mContactsMapComponent;
+    }
+
     public void clearContactsComponent() {
         mContactsComponent = null;
     }
 
     public void clearContactsListComponent() {
         mContactsListComponent = null;
+    }
+
+    public void clearContactsMapComponent() {
+        mContactsMapComponent = null;
     }
 
 

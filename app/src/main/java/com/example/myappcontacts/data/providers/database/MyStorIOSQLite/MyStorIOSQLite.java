@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.myappcontacts.data.dao.contacts.db.ContactsModel;
+import com.example.myappcontacts.data.dao.contactsmap.MapMarkersModel;
 import com.example.myappcontacts.data.providers.database.databaseutils.ContactsBaseHelper;
 import com.example.myappcontacts.data.providers.database.databaseutils.ContactsCursorWrapper;
 import com.example.myappcontacts.data.providers.database.databaseutils.Queries;
@@ -84,6 +85,30 @@ public class MyStorIOSQLite implements IMyStorIOSQLite {
         mDb.delete(ContactsTable.NAME,
                 ContactsTable.Cols.UUID + " = ?",
                 new String[]{uuidString});
+    }
+
+    @Override
+    public List<MapMarkersModel> getMapMarekersList() {
+        ContactsCursorWrapper cursor = Queries.queryContacts(mDb,
+                null,
+                null);
+        List<MapMarkersModel> mapMarkersList = new ArrayList<>();
+        try {
+            if (cursor.getCount() == 0) {
+                return null;
+            }
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                MapMarkersModel mapMarkersModel = cursor.getMapMarkersModel();
+                if(mapMarkersModel!=null) {
+                    mapMarkersList.add(mapMarkersModel);
+                }
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+        return mapMarkersList;
     }
 
 }

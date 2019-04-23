@@ -10,6 +10,7 @@ import com.example.myappcontacts.data.dao.contacts.db.ContactsModel;
 import com.example.myappcontacts.di.contactslist.ContactsListModule;
 import com.example.myappcontacts.presentation.contactslist.view.IContactsListView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,7 +47,7 @@ public class ContactsListPresenter extends MvpPresenter<IContactsListView> imple
     }
 
     private void onError(Throwable throwable) {
-        Log.e(TAG, getClass().getSimpleName() + "onError " + throwable);
+        Log.e(TAG, getClass().getSimpleName() + " onError " + throwable);
     }
 
     @Override
@@ -77,6 +78,11 @@ public class ContactsListPresenter extends MvpPresenter<IContactsListView> imple
     @Override
     public void onContactItemClicked(UUID contactId) {
         getViewState().openContact(contactId);
+    }
+
+    @Override
+    public void onShowContactsMapClicked() {
+        getViewState().openMap();
     }
 
     @Override

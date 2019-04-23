@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.myappcontacts.R;
 import com.example.myappcontacts.data.dao.contacts.db.ContactsModel;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +55,8 @@ public class ContactsListRecyclerAdapter extends RecyclerView.Adapter<ContactsLi
 
     @Override
     public void onItemDismiss(int position) {
-        mOnItemListener.onItemSwipe(mContactsList.get(position).getContactId());
+        UUID contactId = mContactsList.get(position).getContactId();
+        mOnItemListener.onItemSwipe(contactId);
         mContactsList.remove(position);
         notifyDataSetChanged();
     }
@@ -62,6 +64,8 @@ public class ContactsListRecyclerAdapter extends RecyclerView.Adapter<ContactsLi
     class ContactsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private UUID mContactId;
 
+        @BindView(R.id.contact_photo)
+        SimpleDraweeView mPhotoView;
         @BindView(R.id.contact_name)
         TextView mContactNameTextView;
         @BindView(R.id.contact_have_telephone)
@@ -77,6 +81,12 @@ public class ContactsListRecyclerAdapter extends RecyclerView.Adapter<ContactsLi
             mContactId = contactsModel.getContactId();
             String firstName = contactsModel.getFirstName();
             String lastName = contactsModel.getLastName();
+            String photoStringUri = contactsModel.getPhotoUri();
+            if (photoStringUri != null) {
+                mPhotoView.setImageURI(photoStringUri);
+            } else {
+                mPhotoView.setImageResource(R.drawable.ic_contact_photo);
+            }
             if (firstName.equals("") && lastName.equals("")) {
                 mContactNameTextView.setText(R.string.no_name);
             } else {

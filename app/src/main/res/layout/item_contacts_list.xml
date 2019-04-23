@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/tools"
+    style="?android:listSeparatorTextViewStyle"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    style="?android:listSeparatorTextViewStyle">
+    android:layout_height="wrap_content">
 
     <FrameLayout
-        android:layout_width="60dp"
-        android:layout_height="60dp"
         android:id="@+id/photo_holder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/photo_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/ic_contact_photo">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/contact_photo"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:contentDescription="@string/last_name"
-            android:src="@drawable/ic_contact_photo"/>
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/photo_background"
+            android:scaleType="centerCrop"
+            fresco:placeholderImage="@drawable/ic_contact_photo"
+            fresco:roundAsCircle="true" />
     </FrameLayout>
-
 
     <TextView
         android:id="@+id/contact_name"
@@ -35,11 +34,11 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:textSize="18sp"
-        android:textColor="@android:color/black"
         android:layout_marginBottom="8dp"
         android:gravity="center|start"
         android:text="TextView"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/contact_have_telephone"
         app:layout_constraintStart_toEndOf="@id/photo_holder"
@@ -51,8 +50,9 @@
         android:layout_height="30dp"
         android:layout_marginEnd="16dp"
         android:contentDescription="@string/telephone_number"
+        android:src="@drawable/ic_contact_phone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/ic_contact_phone" />
+        app:layout_constraintTop_toTopOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

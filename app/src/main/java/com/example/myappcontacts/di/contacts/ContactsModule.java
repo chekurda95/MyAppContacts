@@ -14,13 +14,13 @@ public class ContactsModule {
 
     @Provides
     @ContactsScope
-    IContactsInteractor provideContactsInteractor(IContactsRepository contactsRepository){
+    IContactsInteractor provideContactsInteractor(IContactsRepository contactsRepository) {
         return new ContactsInteractor(contactsRepository);
     }
 
     @Provides
     @ContactsScope
-    IContactsRepository provideContactsRepository(IDataBaseProvider dataBaseProvider){
+    IContactsRepository provideContactsRepository(IDataBaseProvider dataBaseProvider) {
         return new ContactsRepository(dataBaseProvider);
     }
 

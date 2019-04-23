@@ -18,4 +18,6 @@ public interface IContactsListView extends MvpView {
     void updateContactsList(List<ContactsModel> contactsList);
 
     void openContact(UUID contactId);
+
+    void openMap();
 }

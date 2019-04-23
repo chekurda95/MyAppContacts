@@ -1,5 +1,9 @@
 package com.example.myappcontacts.presentation.contactslist.view;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,10 +22,12 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.example.myappcontacts.R;
 import com.example.myappcontacts.data.dao.contacts.db.ContactsModel;
+import com.example.myappcontacts.presentation.contacts.view.ContactsFragment;
 import com.example.myappcontacts.presentation.contactslist.adapters.ContactsListRecyclerAdapter;
 import com.example.myappcontacts.presentation.contactslist.adapters.SimpleItemTouchHelperCallback;
 import com.example.myappcontacts.presentation.contactslist.presenter.ContactsListPresenter;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,7 +36,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static android.support.v4.content.ContextCompat.checkSelfPermission;
+
 public class ContactsListFragment extends MvpAppCompatFragment implements IContactsListView, ContactsListRecyclerAdapter.OnItemListener {
+
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
     private Unbinder mUnbinder;
     private ContactsListRecyclerAdapter mContactsListRecyclerAdapter;
@@ -79,6 +89,9 @@ public class ContactsListFragment extends MvpAppCompatFragment implements IConta
             case (R.id.add_new_contact):
                 addContact();
                 return true;
+            case (R.id.show_on_map):
+                mContactsListPresenter.onShowContactsMapClicked();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -107,14 +120,46 @@ public class ContactsListFragment extends MvpAppCompatFragment implements IConta
 
     @Override
     public void onItemSwipe(UUID contactId) {
-        mContactsListPresenter.deleteContact(contactId);
+        deleteContact(contactId);
     }
 
     @Override
     public void openContact(UUID contactId) {
         Bundle args = new Bundle();
-        args.putString("contactId", contactId.toString());
+        args.putString(ContactsFragment.ARG_CONTACT_ID, contactId.toString());
         NavHostFragment.findNavController(this).navigate(R.id.contactsFragment, args);
+    }
+
+    @Override
+    public void openMap(){
+        if(hasLocationPermission()){
+            NavHostFragment.findNavController(this).navigate(R.id.contactsMapFragment);
+        } else {
+            requestPermissions();
+        }
+    }
+
+    private void requestPermissions() {
+        String [] LOCATION_PERMISSIONS = new String[]{
+                Manifest.permission.ACCESS_FINE_LOCATION};
+        requestPermissions(LOCATION_PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE);
+    }
+
+    private boolean hasLocationPermission() {
+        int result = checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
+        return result == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case LOCATION_PERMISSION_REQUEST_CODE:
+                if(hasLocationPermission()){
+                    openMap();
+                }
+                default:
+                    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
     @Override

@@ -13,7 +13,7 @@ public class ContactsListInteractor implements IContactsListInteractor {
 
     private IContactsListRepository mContactsListRepository;
 
-    public ContactsListInteractor(IContactsListRepository contactsListRepository){
+    public ContactsListInteractor(IContactsListRepository contactsListRepository) {
         mContactsListRepository = contactsListRepository;
     }
 

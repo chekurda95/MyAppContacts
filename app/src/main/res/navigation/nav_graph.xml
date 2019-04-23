@@ -23,7 +23,14 @@
         <action
             android:id="@+id/action_contactsListFragment_to_contactsFragment"
             app:destination="@+id/contactsFragment" />
+        <action
+            android:id="@+id/action_contactsListFragment_to_contactsMapFragment"
+            app:destination="@id/contactsMapFragment" />
 
 
     </fragment>
+    <fragment
+        android:id="@+id/contactsMapFragment"
+        android:name="com.example.myappcontacts.presentation.contactsmap.view.ContactsMapFragment"
+        android:label="ContactsMapFragment" />
 </navigation>

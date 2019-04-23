@@ -1,6 +1,7 @@
 package com.example.myappcontacts.data.providers.database;
 
 import com.example.myappcontacts.data.dao.contacts.db.ContactsModel;
+import com.example.myappcontacts.data.dao.contactsmap.MapMarkersModel;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,5 +20,7 @@ public interface IDataBaseProvider {
     Single<List<ContactsModel>> loadContactsList();
 
     Completable deleteContact(UUID contactId);
+
+    Single<List<MapMarkersModel>> loadMapMarkersList();
 
 }

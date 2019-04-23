@@ -9,11 +9,11 @@ import java.util.UUID;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 
-public class ContactsListRepository implements IContactsListRepository{
+public class ContactsListRepository implements IContactsListRepository {
 
     private IDataBaseProvider mDataBaseProvider;
 
-    public ContactsListRepository(IDataBaseProvider dataBaseProvider){
+    public ContactsListRepository(IDataBaseProvider dataBaseProvider) {
         mDataBaseProvider = dataBaseProvider;
     }
 

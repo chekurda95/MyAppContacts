@@ -9,5 +9,6 @@ import io.reactivex.Single;
 
 public interface IContactsRepository {
     Single<ContactsModel> loadContact(UUID contactId);
+
     Completable updateContact(ContactsModel contactsModel);
 }

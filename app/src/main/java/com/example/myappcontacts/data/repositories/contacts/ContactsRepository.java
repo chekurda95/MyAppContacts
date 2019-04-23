@@ -12,7 +12,7 @@ public class ContactsRepository implements IContactsRepository {
 
     private IDataBaseProvider mDataBaseProvider;
 
-    public ContactsRepository(IDataBaseProvider sqLiteDbProvider){
+    public ContactsRepository(IDataBaseProvider sqLiteDbProvider) {
         mDataBaseProvider = sqLiteDbProvider;
     }
 

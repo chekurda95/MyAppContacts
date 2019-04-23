@@ -1,5 +1,6 @@
 package com.example.myappcontacts.presentation.contacts.presenter;
 
+import android.net.Uri;
 import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
@@ -64,6 +65,9 @@ public class ContactsPresenter extends MvpPresenter<IContactsView> implements IC
 
     @Override
     public void updateContact(ContactsModel contactsModel) {
+        if(contactsModel.getPhotoUri() == null && mContactsModel.getPhotoUri()!=null){
+            contactsModel.setPhotoUri(mContactsModel.getPhotoUri());
+        }
         mContactsModel = contactsModel;
         mSaveButtonActive = !mSaveButtonActive;
         getViewState().updateUI(contactsModel, mSaveButtonActive);
@@ -85,7 +89,18 @@ public class ContactsPresenter extends MvpPresenter<IContactsView> implements IC
             mSaveButtonActive = !mSaveButtonActive;
             getViewState().updateUI(mContactsModel, mSaveButtonActive);
         }
+    }
 
+    @Override
+    public void onPhotoImageClicked() {
+        if(mSaveButtonActive){
+            getViewState().updatePhoto();
+        }
+    }
+
+    @Override
+    public void photoUriLoaded(String photoUri) {
+        mContactsModel.setPhotoUri(photoUri);
     }
 
     @Override

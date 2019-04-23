@@ -5,7 +5,7 @@ import com.example.myappcontacts.presentation.contacts.presenter.ContactsPresent
 
 import dagger.Subcomponent;
 
-@Subcomponent (modules = {ContactsModule.class})
+@Subcomponent(modules = {ContactsModule.class})
 @ContactsScope
 public interface ContactsComponent {
     void inject(ContactsPresenter contactsPresenter);

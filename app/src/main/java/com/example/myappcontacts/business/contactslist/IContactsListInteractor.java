@@ -10,6 +10,8 @@ import io.reactivex.Single;
 
 public interface IContactsListInteractor {
     Single<UUID> addContact();
+
     Completable deleteContact(UUID contactId);
+
     Single<List<ContactsModel>> loadContactsList();
 }

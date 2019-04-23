@@ -1,7 +1,10 @@
 package com.example.myappcontacts.presentation.contacts.view;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -30,7 +33,7 @@ import butterknife.Unbinder;
 
 
 public class ContactsFragment extends MvpAppCompatFragment implements IContactsView {
-    private static final String ARG_CONTACT_ID = "contactId";
+    public static final String ARG_CONTACT_ID = "contactId";
 
     private UUID mContactId;
     private Unbinder mUnbinder;
@@ -39,7 +42,7 @@ public class ContactsFragment extends MvpAppCompatFragment implements IContactsV
     ContactsPresenter mContactsPresenter;
 
     @BindView(R.id.contact_photo)
-    SimpleDraweeView mPhotoImageView;
+    SimpleDraweeView mPhotoImage;
 
     @BindView(R.id.contacts_text_views)
     LinearLayout mTextViews;
@@ -49,6 +52,8 @@ public class ContactsFragment extends MvpAppCompatFragment implements IContactsV
     TextView mCompanyTextView;
     @BindView(R.id.tel_number_text_view)
     TextView mTelNumberTextView;
+    @BindView(R.id.address_text_view)
+    TextView mAddressTextView;
 
     @BindView(R.id.contacts_edit_texts)
     LinearLayout mEditTexts;
@@ -60,6 +65,8 @@ public class ContactsFragment extends MvpAppCompatFragment implements IContactsV
     EditText mCompanyNameEditText;
     @BindView(R.id.tel_number_edit_text)
     EditText mTelNumberEditText;
+    @BindView(R.id.address_edit_text)
+    TextView mAddressEditText;
 
     MenuItem mEdit_Save_Button;
 
@@ -87,6 +94,7 @@ public class ContactsFragment extends MvpAppCompatFragment implements IContactsV
         setHasOptionsMenu(true);
         mUnbinder = ButterKnife.bind(this, view);
 
+        mPhotoImage.setOnClickListener(v -> mContactsPresenter.onPhotoImageClicked());
     }
 
     @Override
@@ -95,7 +103,6 @@ public class ContactsFragment extends MvpAppCompatFragment implements IContactsV
         inflater.inflate(R.menu.fragment_contacts_menu, menu);
         mEdit_Save_Button = menu.findItem(R.id.edit_save_changes);
         mContactsPresenter.loadContact(mContactId);
-        Log.i("MY_TAG2", mEdit_Save_Button == null ? "null" : "ne null");
     }
 
     @Override
@@ -108,6 +115,35 @@ public class ContactsFragment extends MvpAppCompatFragment implements IContactsV
                 return super.onOptionsItemSelected(item);
         }
 
+    }
+
+    @Override
+    public void updateUI(ContactsModel contactsModel, boolean edit) {
+        Log.i("MY_TAG2", "updateUI сработал");
+
+        updateMenuUI(edit);
+
+        if (edit) {
+            mTextViews.setVisibility(View.GONE);
+            mEditTexts.setVisibility(View.VISIBLE);
+            mTelNumberTextView.setVisibility(View.GONE);
+            mTelNumberEditText.setVisibility(View.VISIBLE);
+            mAddressTextView.setVisibility(View.GONE);
+            mAddressEditText.setVisibility(View.VISIBLE);
+            editContact(contactsModel);
+        } else {
+            mTextViews.setVisibility(View.VISIBLE);
+            mEditTexts.setVisibility(View.GONE);
+            mTelNumberTextView.setVisibility(View.VISIBLE);
+            mTelNumberEditText.setVisibility(View.GONE);
+            mAddressTextView.setVisibility(View.VISIBLE);
+            mAddressEditText.setVisibility(View.GONE);
+            showContact(contactsModel);
+        }
+
+        if (contactsModel.getPhotoUri() != null) {
+            mPhotoImage.setImageURI(Uri.parse(contactsModel.getPhotoUri()));
+        }
     }
 
     private void showContact(ContactsModel contactsModel) {
@@ -133,6 +169,12 @@ public class ContactsFragment extends MvpAppCompatFragment implements IContactsV
             mTelNumberTextView.setText(getString(R.string.no_telephone));
             mTelNumberTextView.setTextColor(Color.RED);
         }
+        String address = contactsModel.getAddress();
+        if (address.equals("")) {
+            mAddressTextView.setText(getString(R.string.no_address));
+        } else {
+            mAddressTextView.setText(address);
+        }
     }
 
     private void editContact(ContactsModel contactsModel) {
@@ -140,6 +182,7 @@ public class ContactsFragment extends MvpAppCompatFragment implements IContactsV
         mLastNameEditText.setText(contactsModel.getLastName());
         mCompanyNameEditText.setText(contactsModel.getCompanyName());
         mTelNumberEditText.setText(contactsModel.getTelNumber());
+        mAddressEditText.setText(contactsModel.getAddress());
     }
 
     private void updateMenuUI(boolean edit) {
@@ -154,24 +197,6 @@ public class ContactsFragment extends MvpAppCompatFragment implements IContactsV
         }
     }
 
-    public void updateUI(ContactsModel contactsModel, boolean edit) {
-        updateMenuUI(edit);
-        Log.i("MY_TAG2", "updateUI сработал");
-        if (edit) {
-            mTextViews.setVisibility(View.GONE);
-            mEditTexts.setVisibility(View.VISIBLE);
-            mTelNumberTextView.setVisibility(View.GONE);
-            mTelNumberEditText.setVisibility(View.VISIBLE);
-            editContact(contactsModel);
-        } else {
-            mTextViews.setVisibility(View.VISIBLE);
-            mEditTexts.setVisibility(View.GONE);
-            mTelNumberTextView.setVisibility(View.VISIBLE);
-            mTelNumberEditText.setVisibility(View.GONE);
-            showContact(contactsModel);
-        }
-    }
-
     @Override
     public void updateContact() {
         if (mTelNumberEditText.getText().toString().equals("")) {
@@ -182,7 +207,23 @@ public class ContactsFragment extends MvpAppCompatFragment implements IContactsV
             contactsModel.setLastName(mLastNameEditText.getText().toString());
             contactsModel.setCompanyName(mCompanyNameEditText.getText().toString());
             contactsModel.setTelNumber(mTelNumberEditText.getText().toString());
+            contactsModel.setAddress(mAddressEditText.getText().toString());
             mContactsPresenter.updateContact(contactsModel);
+        }
+    }
+
+    @Override
+    public void updatePhoto() {
+        startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI), 100);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100 && data != null) {
+            Uri uri = data.getData();
+            mPhotoImage.setImageURI(uri);
+            mContactsPresenter.photoUriLoaded(uri.toString());
         }
     }
 

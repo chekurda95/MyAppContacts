@@ -9,12 +9,15 @@ public class ContactsModel {
     private String mLastName;
     private String mCompanyName;
     private String mTelNumber;
+    private String mPhotoUri;
+    private String mAddress;
 
-    public ContactsModel(){
+
+    public ContactsModel() {
         mContactId = UUID.randomUUID();
     }
 
-    public ContactsModel(UUID contactId){
+    public ContactsModel(UUID contactId) {
         mContactId = contactId;
     }
 
@@ -52,5 +55,21 @@ public class ContactsModel {
 
     public void setTelNumber(String telNumber) {
         mTelNumber = telNumber;
+    }
+
+    public String getPhotoUri() {
+        return mPhotoUri;
+    }
+
+    public void setPhotoUri(String photoUri) {
+        mPhotoUri = photoUri;
+    }
+
+    public String getAddress() {
+        return mAddress;
+    }
+
+    public void setAddress(String address) {
+        mAddress = address;
     }
 }

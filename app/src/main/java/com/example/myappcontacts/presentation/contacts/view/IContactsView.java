@@ -13,4 +13,7 @@ public interface IContactsView extends MvpView {
 
     @StateStrategyType(OneExecutionStateStrategy.class)
     void updateContact();
+
+    @StateStrategyType(SkipStrategy.class)
+    void updatePhoto();
 }

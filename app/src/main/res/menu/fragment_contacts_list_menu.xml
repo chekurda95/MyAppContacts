@@ -5,4 +5,10 @@
         android:icon="@drawable/ic_add_new_contact"
         android:title="@string/add_new_contact"
         app:showAsAction="ifRoom|withText"/>
+
+    <item android:id="@+id/show_on_map"
+        android:icon="@drawable/ic_show_on_map"
+        android:title="@string/show_on_map"
+        app:showAsAction="never"/>
+
 </menu>

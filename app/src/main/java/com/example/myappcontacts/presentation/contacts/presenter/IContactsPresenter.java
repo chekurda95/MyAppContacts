@@ -10,4 +10,8 @@ public interface IContactsPresenter {
     void updateContact(ContactsModel contactsModel);
 
     void onEditSaveButtonClicked();
+
+    void onPhotoImageClicked();
+
+    void photoUriLoaded(String photoUri);
 }

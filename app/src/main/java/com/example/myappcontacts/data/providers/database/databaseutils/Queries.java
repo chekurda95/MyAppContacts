@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.myappcontacts.data.dao.contacts.db.ContactsModel;
 
-import static com.example.myappcontacts.data.providers.database.databaseutils.ContactsDbSchema.*;
+import static com.example.myappcontacts.data.providers.database.databaseutils.ContactsDbSchema.ContactsTable;
 
 //настройка курсора и модели
 public class Queries {
@@ -30,6 +30,8 @@ public class Queries {
         contentValues.put(ContactsTable.Cols.LAST_NAME, contactsModel.getLastName());
         contentValues.put(ContactsTable.Cols.COMPANY_NAME, contactsModel.getCompanyName());
         contentValues.put(ContactsTable.Cols.TEL_NUMBER, contactsModel.getTelNumber());
+        contentValues.put(ContactsTable.Cols.PHOTO_URI, contactsModel.getPhotoUri());
+        contentValues.put(ContactsTable.Cols.ADDRESS, contactsModel.getAddress());
         return contentValues;
     }
 }

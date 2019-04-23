@@ -1,6 +1,7 @@
 package com.example.myappcontacts.data.providers.database;
 
 import com.example.myappcontacts.data.dao.contacts.db.ContactsModel;
+import com.example.myappcontacts.data.dao.contactsmap.MapMarkersModel;
 import com.example.myappcontacts.data.providers.database.MyStorIOSQLite.IMyStorIOSQLite;
 
 import java.util.List;
@@ -40,5 +41,10 @@ public class SQLiteDbProvider implements IDataBaseProvider {
     @Override
     public Completable deleteContact(UUID contactId) {
         return Completable.fromAction(() -> mDataBase.deleteContact(contactId));
+    }
+
+    @Override
+    public Single<List<MapMarkersModel>> loadMapMarkersList() {
+        return Single.fromCallable(() -> mDataBase.getMapMarekersList());
     }
 }
