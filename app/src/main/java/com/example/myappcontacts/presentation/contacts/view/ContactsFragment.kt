@@ -171,8 +171,8 @@ class ContactsFragment : MvpAppCompatFragment(), IContactsView {
         }
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
         saveContactsModel()
     }
 }
