@@ -16,13 +16,15 @@ class ContactsListInteractor(private val contactsListRepository: IContactsListRe
     }
 
     override fun deleteContact(contactId: UUID): Completable {
-        return contactsListRepository.deleteContact(contactId)
+        return contactsListRepository
+                .deleteContact(contactId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun loadContactsList(): Single<List<ContactsModel>> {
-        return contactsListRepository.loadContactsList()
+        return contactsListRepository
+                .loadContactsList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }

@@ -12,11 +12,12 @@ import androidx.navigation.fragment.NavHostFragment
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.example.myappcontacts.R
-import com.example.myappcontacts.data.dao.contactsmap.MapMarkersModel
-import com.example.myappcontacts.presentation.contacts.view.ContactsFragment
+import com.example.myappcontacts.data.dao.contactsmap.db.MapMarkersModel
+import com.example.myappcontacts.presentation.contacts.view.ARG_CONTACT_ID
 import com.example.myappcontacts.presentation.contactsmap.presenter.ContactsMapPresenter
 import com.facebook.common.executors.CallerThreadExecutor
 import com.facebook.common.references.CloseableReference
+import com.facebook.datasource.DataSource
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber
 import com.facebook.imagepipeline.image.CloseableImage
@@ -72,18 +73,20 @@ class ContactsMapFragment : MvpAppCompatFragment(), IContactsMapView, OnMapReady
             } catch (e: IOException) {
                 e.printStackTrace()
             }
-            latLngList.add(LatLng(address!!.latitude, address.longitude))
+            if(address == null) continue
+            latLngList.add(LatLng(address.latitude, address.longitude))
 
             val contactMarker = MarkerOptions()
                     .position(latLngList.last())
 
-            if (name == "") contactMarker.title(getString(R.string.no_name))
-            else contactMarker.title(name)
+            contactMarker.title(
+                    if (name.isBlank()) getString(R.string.no_name)
+                    else name)
 
             val marker = map!!.addMarker(contactMarker)
             markersMap[marker] = contactId
 
-            if (photoUriString != "") {
+            if (photoUriString.isNotBlank()) {
                 val imageRequest = ImageRequestBuilder
                         .newBuilderWithSource(Uri.parse(photoUriString))
                         .build()
@@ -101,12 +104,13 @@ class ContactsMapFragment : MvpAppCompatFragment(), IContactsMapView, OnMapReady
                         }
                     }
 
-                    override fun onFailureImpl(dataSource: com.facebook.datasource.DataSource<CloseableReference<CloseableImage>>?) {
+                    override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>?) {
                         dataSource?.close()
                     }
                 }, CallerThreadExecutor.getInstance())
             }
         }
+        if(latLngList.isEmpty()) return
         contactsMapPresenter.setShownMarkersMap(markersMap)
 
         if (latLngList.size >= 2) {
@@ -121,12 +125,12 @@ class ContactsMapFragment : MvpAppCompatFragment(), IContactsMapView, OnMapReady
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-            map = googleMap
-            googleMap.clear()
-            googleMap.uiSettings.isCompassEnabled = true
-            googleMap.uiSettings.isScrollGesturesEnabled = true
-            googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
-            googleMap.setOnMarkerClickListener(this)
+        map = googleMap
+        googleMap.clear()
+        googleMap.uiSettings.isCompassEnabled = true
+        googleMap.uiSettings.isScrollGesturesEnabled = true
+        googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
+        googleMap.setOnMarkerClickListener(this)
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
@@ -136,7 +140,7 @@ class ContactsMapFragment : MvpAppCompatFragment(), IContactsMapView, OnMapReady
 
     override fun openContact(contactId: UUID) {
         val args = Bundle()
-        args.putString(ContactsFragment.ARG_CONTACT_ID, contactId.toString())
+        args.putString(ARG_CONTACT_ID, contactId.toString())
         NavHostFragment.findNavController(this).navigate(R.id.contactsFragment, args)
     }
 }

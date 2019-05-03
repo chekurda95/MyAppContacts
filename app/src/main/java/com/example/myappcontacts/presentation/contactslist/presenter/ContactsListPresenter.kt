@@ -12,45 +12,49 @@ import io.reactivex.disposables.CompositeDisposable
 import java.util.*
 import javax.inject.Inject
 
+internal const val TAG = "TEST"
+
 @InjectViewState
 class ContactsListPresenter : MvpPresenter<IContactsListView>(), IContactsListPresenter {
-    companion object {
-        val TAG = "TEST"
-    }
-
-    init {
-        App.get().plusContactsListModule(ContactsListModule()).inject(this)
-    }
 
     @Inject
     lateinit var contactsListInteractor: IContactsListInteractor
 
     private val disposer = CompositeDisposable()
 
+    init {
+        App.get().plusContactsListModule(ContactsListModule()).inject(this)
+    }
+
     override fun addContact() {
-        disposer.add(contactsListInteractor.addContact()
+        disposer.add(contactsListInteractor
+                .addContact()
                 .subscribe({ onAddSuccess(it) }, { onError(it) }))
     }
 
     private fun onAddSuccess(contactId: UUID) = viewState.openContact(contactId)
 
-    private fun onError(throwable: Throwable) = Log.e(TAG, this::class.simpleName + " onError " + throwable)
+    private fun onError(throwable: Throwable) =
+            Log.e(TAG, this::class.simpleName + " onError " + throwable)
 
     override fun deleteContact(contactId: UUID) {
-        disposer.add(contactsListInteractor.deleteContact(contactId)
+        disposer.add(contactsListInteractor
+                .deleteContact(contactId)
                 .subscribe({ onDeleteSuccess() }, { onError(it) }))
     }
 
-    private fun onDeleteSuccess() = Log.i(TAG, this::class.simpleName + " contact deleted")
+    private fun onDeleteSuccess() =
+            Log.i(TAG, this::class.simpleName + " contact deleted")
 
     override fun loadContactsList() {
-        disposer.add(contactsListInteractor.loadContactsList()
+        disposer.add(contactsListInteractor
+                .loadContactsList()
                 .subscribe({ onLoadSuccess(it) }, { onError(it) }))
     }
 
     private fun onLoadSuccess(contactsList: List<ContactsModel>) {
-        Log.i(TAG, """${this::class.simpleName}: onLoadSuccess сработал, загружено ${contactsList.size} контакта""")
         viewState.updateContactsList(contactsList)
+        Log.i(TAG, "${this::class.simpleName}: onLoadSuccess сработал, загружено ${contactsList.size} контактов")
     }
 
     override fun onItemSwiped(contactId: UUID) {

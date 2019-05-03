@@ -15,13 +15,10 @@ import com.example.myappcontacts.presentation.contacts.presenter.ContactsPresent
 import kotlinx.android.synthetic.main.fragment_contact.*
 import java.util.*
 
+const val ARG_CONTACT_ID = "contactId"
+const val REQUEST_CODE_PHOTO = 100
 
 class ContactsFragment : MvpAppCompatFragment(), IContactsView {
-
-    companion object {
-        val ARG_CONTACT_ID = "contactId"
-        val REQUEST_CODE_PHOTO = 100
-    }
 
     @InjectPresenter
     lateinit var contactsPresenter: ContactsPresenter
@@ -31,7 +28,9 @@ class ContactsFragment : MvpAppCompatFragment(), IContactsView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        contactId = UUID.fromString(arguments!!.getString(ARG_CONTACT_ID))
+        if (arguments!!.containsKey(ARG_CONTACT_ID)) {
+            contactId = UUID.fromString(arguments?.getString(ARG_CONTACT_ID))
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -54,15 +53,14 @@ class ContactsFragment : MvpAppCompatFragment(), IContactsView {
         contactsPresenter.loadContact(contactId)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.edit_save_changes -> {
-                contactsPresenter.onEditSaveButtonClicked()
-                return true
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+            when (item.itemId) {
+                R.id.edit_save_changes -> {
+                    contactsPresenter.onEditSaveButtonClicked()
+                    true
+                }
+                else -> super.onOptionsItemSelected(item)
             }
-            else -> return super.onOptionsItemSelected(item)
-        }
-    }
 
     override fun updateUI(contactsModel: ContactsModel, edit: Boolean) {
         updateMenuUI(edit)
@@ -72,7 +70,7 @@ class ContactsFragment : MvpAppCompatFragment(), IContactsView {
         } else {
             showContact(contactsModel)
         }
-        if (contactsModel.photoUri != "") {
+        if (contactsModel.photoUri.isNotBlank()) {
             contact_photo.setImageURI(contactsModel.photoUri)
         }
     }
@@ -87,51 +85,50 @@ class ContactsFragment : MvpAppCompatFragment(), IContactsView {
     }
 
     private fun showContact(contactsModel: ContactsModel) {
-        val firstName = contactsModel.firstName
-        val lastName = contactsModel.lastName
-        if (firstName != "" || lastName != "") {
-            name_text_view.text = getString(R.string.contact_name, firstName, lastName).trim()
-        } else {
-            name_text_view.text = getString(R.string.no_name)
-        }
+        with(contactsModel) {
+            name_text_view.text =
+                    if (firstName.isNotBlank() || lastName.isNotBlank()) {
+                        getString(R.string.contact_name, firstName, lastName).trim()
+                    } else {
+                        getString(R.string.no_name)
+                    }
 
-        val companyName = contactsModel.companyName
-        if (companyName != "") {
-            company_text_view.visibility = View.VISIBLE
-            company_text_view.text = contactsModel.companyName
-        } else {
-            company_text_view.visibility = View.GONE
-        }
+            if (companyName.isNotBlank()) {
+                company_text_view.visibility = View.VISIBLE
+                company_text_view.text = contactsModel.companyName
+            } else {
+                company_text_view.visibility = View.GONE
+            }
 
-        val telNumber = contactsModel.telNumber
-        if (telNumber != "") {
-            tel_number_text_view.text = contactsModel.telNumber
-            tel_number_text_view.setTextColor(Color.BLACK)
-        } else {
-            tel_number_text_view.text = getString(R.string.no_telephone)
-            tel_number_text_view.setTextColor(Color.RED)
-        }
+            if (telNumber.isNotBlank()) {
+                tel_number_text_view.text = contactsModel.telNumber
+                tel_number_text_view.setTextColor(Color.BLACK)
+            } else {
+                tel_number_text_view.text = getString(R.string.no_telephone)
+                tel_number_text_view.setTextColor(Color.RED)
+            }
 
-        val address = contactsModel.address
-        if (address != "") {
-            address_text_view.text = address
-        } else {
-            address_text_view.text = getString(R.string.no_address)
+            address_text_view.text =
+                    if (address.isNotBlank()) address
+                    else getString(R.string.no_address)
+
         }
     }
 
     private fun editContact(contactsModel: ContactsModel) {
-        first_name_edit_text.setText(contactsModel.firstName)
-        last_name_edit_text.setText(contactsModel.lastName)
-        company_name_edit_text.setText(contactsModel.companyName)
-        tel_number_edit_text.setText(contactsModel.telNumber)
-        address_edit_text.setText(contactsModel.address)
+        with(contactsModel) {
+            first_name_edit_text.setText(firstName)
+            last_name_edit_text.setText(lastName)
+            company_name_edit_text.setText(companyName)
+            tel_number_edit_text.setText(telNumber)
+            address_edit_text.setText(address)
+        }
     }
 
     private fun updateMenuUI(edit: Boolean) {
         if (edit) {
-            editSaveButton?.icon = ContextCompat.getDrawable(context!!, R.drawable.ic_save_changes)
             editSaveButton?.setTitle(R.string.save_contact)
+            editSaveButton?.icon = ContextCompat.getDrawable(context!!, R.drawable.ic_save_changes)
         } else {
             editSaveButton?.setTitle(R.string.edit_contact)
             editSaveButton?.icon = ContextCompat.getDrawable(context!!, R.drawable.ic_edit_contact)
@@ -139,21 +136,30 @@ class ContactsFragment : MvpAppCompatFragment(), IContactsView {
     }
 
     override fun updateContact() {
-        if (tel_number_edit_text.text.toString() == "") {
+        if (tel_number_edit_text.text.toString().isBlank()) {
             tel_number_edit_text.setHintTextColor(Color.RED)
         } else {
-            val contactsModel = ContactsModel(contactId)
-            contactsModel.firstName = first_name_edit_text.text.toString()
-            contactsModel.lastName = last_name_edit_text.text.toString()
-            contactsModel.companyName = company_name_edit_text.text.toString()
-            contactsModel.telNumber = tel_number_edit_text.text.toString()
-            contactsModel.address = address_edit_text.text.toString()
-            contactsPresenter.updateContact(contactsModel)
+                contactsPresenter.updateContact(saveContactsModel())
+            }
+        }
+
+    private fun saveContactsModel(): ContactsModel {
+        with(ContactsModel(contactId)) {
+            firstName = first_name_edit_text.text.toString()
+            lastName = last_name_edit_text.text.toString()
+            companyName = company_name_edit_text.text.toString()
+            telNumber = tel_number_edit_text.text.toString()
+            address = address_edit_text.text.toString()
+
+            contactsPresenter.saveContactsModel(this)
+            return this
         }
     }
 
     override fun updatePhoto() {
-        startActivityForResult(Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI), REQUEST_CODE_PHOTO)
+        startActivityForResult(Intent(Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI),
+                REQUEST_CODE_PHOTO)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -163,5 +169,10 @@ class ContactsFragment : MvpAppCompatFragment(), IContactsView {
             contact_photo.setImageURI(uri.toString())
             contactsPresenter.photoUriLoaded(uri.toString())
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        saveContactsModel()
     }
 }

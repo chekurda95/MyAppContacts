@@ -2,10 +2,9 @@ package com.example.myappcontacts.data.providers.database.databaseutils
 
 import android.content.ContentValues
 import android.database.Cursor
-
 import android.database.sqlite.SQLiteDatabase
 import com.example.myappcontacts.data.dao.contacts.db.ContactsModel
-import com.example.myappcontacts.data.providers.database.databaseutils.ContactsDBSchema.*
+import com.example.myappcontacts.data.providers.database.databaseutils.ContactsDBSchema.ContactsTable
 
 class Queries {
     companion object {

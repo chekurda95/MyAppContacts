@@ -1,6 +1,6 @@
 package com.example.myappcontacts.data.repositories.contactsmap
 
-import com.example.myappcontacts.data.dao.contactsmap.MapMarkersModel
+import com.example.myappcontacts.data.dao.contactsmap.db.MapMarkersModel
 
 import io.reactivex.Single
 

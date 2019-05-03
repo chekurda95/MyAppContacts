@@ -1,7 +1,7 @@
 package com.example.myappcontacts.data.providers.database
 
 import com.example.myappcontacts.data.dao.contacts.db.ContactsModel
-import com.example.myappcontacts.data.dao.contactsmap.MapMarkersModel
+import com.example.myappcontacts.data.dao.contactsmap.db.MapMarkersModel
 import io.reactivex.Completable
 import io.reactivex.Single
 import java.util.*

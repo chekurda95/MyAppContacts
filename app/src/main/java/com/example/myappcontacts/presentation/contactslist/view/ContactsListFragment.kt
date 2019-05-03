@@ -12,23 +12,21 @@ import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.example.myappcontacts.R
 import com.example.myappcontacts.data.dao.contacts.db.ContactsModel
-import com.example.myappcontacts.presentation.contacts.view.ContactsFragment
+import com.example.myappcontacts.presentation.contacts.view.ARG_CONTACT_ID
 import com.example.myappcontacts.presentation.contactslist.adapters.ContactsListRecyclerAdapter
 import com.example.myappcontacts.presentation.contactslist.adapters.SimpleItemTouchHelperCallback
 import com.example.myappcontacts.presentation.contactslist.presenter.ContactsListPresenter
 import kotlinx.android.synthetic.main.fragment_contacts_list.*
 import java.util.*
 
-class ContactsListFragment : MvpAppCompatFragment(), IContactsListView, ContactsListRecyclerAdapter.OnItemListener {
+internal const val LOCATION_PERMISSION_REQUEST_CODE = 1
 
-    companion object {
-        val LOCATION_PERMISSION_REQUEST_CODE = 1
-    }
+class ContactsListFragment : MvpAppCompatFragment(), IContactsListView {
 
     @InjectPresenter
     lateinit var contactsListPresenter: ContactsListPresenter
 
-    lateinit var contactsListRecyclerAdapter: ContactsListRecyclerAdapter
+    private lateinit var contactsListRecyclerAdapter: ContactsListRecyclerAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_contacts_list, container, false)
@@ -40,12 +38,17 @@ class ContactsListFragment : MvpAppCompatFragment(), IContactsListView, Contacts
 
         //RecyclerView settings
         contacts_recycler_view.layoutManager = LinearLayoutManager(activity)
-        contactsListRecyclerAdapter = ContactsListRecyclerAdapter(this)
+        contactsListRecyclerAdapter = ContactsListRecyclerAdapter()
         contacts_recycler_view.adapter = contactsListRecyclerAdapter
+
 
         //ItemTouchHelper
         val touchHelper = ItemTouchHelper(SimpleItemTouchHelperCallback(contactsListRecyclerAdapter))
         touchHelper.attachToRecyclerView(contacts_recycler_view)
+
+        //Listeners
+        contactsListRecyclerAdapter.onItemClick = contactsListPresenter::onContactItemClicked
+        contactsListRecyclerAdapter.onItemSwipe = contactsListPresenter::onItemSwiped
 
         contactsListPresenter.loadContactsList()
     }
@@ -55,17 +58,18 @@ class ContactsListFragment : MvpAppCompatFragment(), IContactsListView, Contacts
         inflater?.inflate(R.menu.fragment_contacts_list_menu, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.add_new_contact -> {
-                addContact(); true
+    override fun onOptionsItemSelected(item: MenuItem) =
+            when (item.itemId) {
+                R.id.add_new_contact -> {
+                    addContact()
+                    true
+                }
+                R.id.show_on_map -> {
+                    contactsListPresenter.onShowContactsMapClicked()
+                    true
+                }
+                else -> super.onOptionsItemSelected(item)
             }
-            R.id.show_on_map -> {
-                contactsListPresenter.onShowContactsMapClicked(); true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
 
     override fun addContact() {
         contactsListPresenter.addContact()
@@ -79,17 +83,9 @@ class ContactsListFragment : MvpAppCompatFragment(), IContactsListView, Contacts
         contactsListRecyclerAdapter.updateList(contactsList)
     }
 
-    override fun onItemClick(contactId: UUID) {
-        contactsListPresenter.onContactItemClicked(contactId)
-    }
-
-    override fun onItemSwipe(contactId: UUID) {
-        contactsListPresenter.onItemSwiped(contactId)
-    }
-
     override fun openContact(contactId: UUID) {
         val args = Bundle()
-        args.putString(ContactsFragment.ARG_CONTACT_ID, contactId.toString())
+        args.putString(ARG_CONTACT_ID, contactId.toString())
         NavHostFragment.findNavController(this).navigate(R.id.contactsFragment, args)
     }
 
@@ -102,8 +98,8 @@ class ContactsListFragment : MvpAppCompatFragment(), IContactsListView, Contacts
     }
 
     private fun requestPermissions() {
-        val LOCATION_PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-        requestPermissions(LOCATION_PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE)
+        requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                LOCATION_PERMISSION_REQUEST_CODE)
     }
 
     private fun hasLocationPermission(): Boolean {
@@ -114,7 +110,8 @@ class ContactsListFragment : MvpAppCompatFragment(), IContactsListView, Contacts
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when (requestCode) {
             LOCATION_PERMISSION_REQUEST_CODE -> {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) openMap()
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    openMap()
             }
             else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }

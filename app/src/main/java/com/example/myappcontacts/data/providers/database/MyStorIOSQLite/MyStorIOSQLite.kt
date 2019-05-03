@@ -1,7 +1,7 @@
 package com.example.myappcontacts.data.providers.database.MyStorIOSQLite
 
 import com.example.myappcontacts.data.dao.contacts.db.ContactsModel
-import com.example.myappcontacts.data.dao.contactsmap.MapMarkersModel
+import com.example.myappcontacts.data.dao.contactsmap.db.MapMarkersModel
 import com.example.myappcontacts.data.providers.database.databaseutils.ContactsBaseHelper
 import com.example.myappcontacts.data.providers.database.databaseutils.ContactsDBSchema.ContactsTable
 import com.example.myappcontacts.data.providers.database.databaseutils.Queries

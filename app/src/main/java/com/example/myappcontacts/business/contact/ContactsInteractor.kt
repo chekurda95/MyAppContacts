@@ -11,13 +11,15 @@ import java.util.*
 class ContactsInteractor(private val contactsRepository: IContactsRepository): IContactsInteractor{
 
     override fun loadContact(contactId: UUID): Single<ContactsModel> {
-        return contactsRepository.loadContact(contactId)
+        return contactsRepository
+                .loadContact(contactId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun updateContact(contactsModel: ContactsModel): Completable {
-        return contactsRepository.updateContact(contactsModel)
+        return contactsRepository
+                .updateContact(contactsModel)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }

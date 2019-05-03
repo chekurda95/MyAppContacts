@@ -24,7 +24,8 @@ class App: Application(){
         app = this
     }
 
-    private val appComponent = DaggerAppComponent.builder()
+    private val appComponent = DaggerAppComponent
+            .builder()
             .appModule(AppModule(this))
             .build()
     private var contactsComponent: ContactsComponent? = null

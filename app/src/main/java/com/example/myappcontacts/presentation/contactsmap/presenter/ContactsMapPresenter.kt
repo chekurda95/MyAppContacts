@@ -5,7 +5,7 @@ import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.example.myappcontacts.App
 import com.example.myappcontacts.business.contactsmap.IContactsMapInteractor
-import com.example.myappcontacts.data.dao.contactsmap.MapMarkersModel
+import com.example.myappcontacts.data.dao.contactsmap.db.MapMarkersModel
 import com.example.myappcontacts.di.contactsmap.ContactsMapModule
 import com.example.myappcontacts.presentation.contactsmap.view.IContactsMapView
 import com.google.android.gms.maps.model.Marker
@@ -37,7 +37,7 @@ class ContactsMapPresenter: MvpPresenter<IContactsMapView>(), IContactsMapPresen
     }
 
     private fun onLoadSuccess(mapMarkersList: List<MapMarkersModel>) {
-        Log.i(TAG, """${this::class.simpleName} onLoadSuccess ${mapMarkersList.size})""")
+        Log.i(TAG, "${this::class.simpleName} onLoadSuccess ${mapMarkersList.size})")
         viewState.showMarkers(mapMarkersList)
     }
 

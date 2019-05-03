@@ -3,6 +3,7 @@ package com.example.myappcontacts.presentation.contactslist.presenter
 import java.util.UUID
 
 interface IContactsListPresenter {
+
     fun addContact()
 
     fun deleteContact(contactId: UUID)

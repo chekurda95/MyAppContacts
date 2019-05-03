@@ -5,13 +5,10 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.myappcontacts.data.providers.database.databaseutils.ContactsDBSchema.*
 
+internal const val DATABASE_NAME = "contactsBase.db"
+internal const val VERSION = 1
 
 class ContactsBaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, VERSION) {
-
-    companion object {
-        val DATABASE_NAME = "contactsBase.db"
-        val VERSION = 1
-    }
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL("create table " + ContactsTable.NAME + "(" +
@@ -28,5 +25,4 @@ class ContactsBaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {}
-
 }

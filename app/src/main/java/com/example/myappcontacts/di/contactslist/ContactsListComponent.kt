@@ -7,5 +7,6 @@ import dagger.Subcomponent
 @Subcomponent(modules = [ContactsListModule::class])
 @ContactsListScope
 interface ContactsListComponent {
+
     fun inject(contactsListPresenter: ContactsListPresenter)
 }

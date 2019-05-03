@@ -14,4 +14,6 @@ interface IContactsPresenter {
     fun onPhotoImageClicked()
 
     fun photoUriLoaded(photoUri: String)
+
+    fun saveContactsModel(contactsModel: ContactsModel)
 }

@@ -12,29 +12,29 @@ import io.reactivex.disposables.CompositeDisposable
 import java.util.*
 import javax.inject.Inject
 
+internal const val TAG = "TEST"
+
 @InjectViewState
 class ContactsPresenter : MvpPresenter<IContactsView>(), IContactsPresenter {
 
-    companion object {
-        val TAG = "TEST"
-    }
+    @Inject
+    lateinit var contactsInteractor: IContactsInteractor
+
+    private var saveButtonActive = false
+    lateinit var contactsModel: ContactsModel
+
+    private val disposer = CompositeDisposable()
 
     init {
         App.get().plusContactsModule(ContactsModule()).inject(this)
     }
 
-    @Inject
-    lateinit var contactsInteractor: IContactsInteractor
-
-    private val disposer = CompositeDisposable()
-    private var saveButtonActive = false
-    lateinit var contactsModel: ContactsModel
-
     override fun loadContact(contactId: UUID) {
-        Log.i(TAG, " loadContact запущен!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         if (::contactsModel.isInitialized) {
+            Log.i(TAG, " loadContact вызван, котанкт уже загружен")
             viewState.updateUI(contactsModel, saveButtonActive)
         } else {
+            Log.i(TAG, " loadContact вызван, котанкт загружается")
             disposer.add(contactsInteractor
                     .loadContact(contactId)
                     .subscribe({ onSuccess(it) }) { onError(it) })
@@ -42,24 +42,32 @@ class ContactsPresenter : MvpPresenter<IContactsView>(), IContactsPresenter {
     }
 
     private fun onSuccess(contactsModel: ContactsModel) {
-        Log.i(TAG, " onSuccess контакт загружен!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        if (contactsModel.telNumber == "") saveButtonActive = true
-        viewState.updateUI(contactsModel, saveButtonActive)
+        Log.i(TAG, " onSuccess контакт загружен")
         this.contactsModel = contactsModel
+        if (contactsModel.telNumber.isBlank()) saveButtonActive = true
+        viewState.updateUI(contactsModel, saveButtonActive)
     }
 
-    private fun onError(throwable: Throwable) = Log.e(TAG, this::class.simpleName + " onError " + throwable)
+    private fun onError(throwable: Throwable) =
+            Log.e(TAG, this::class.simpleName + " onError " + throwable)
 
-    private fun onUpdate() = Log.i(TAG, " - контакт был успешно обновлен")
+    private fun onUpdate() =
+            Log.i(TAG, " - контакт был успешно обновлен")
 
     override fun updateContact(contactsModel: ContactsModel) {
-        contactsModel.photoUri = this.contactsModel.photoUri
-        this.contactsModel = contactsModel
         saveButtonActive = !saveButtonActive
 
         viewState.updateUI(contactsModel, saveButtonActive)
-        disposer.add(contactsInteractor.updateContact(contactsModel)
+        disposer.add(contactsInteractor
+                .updateContact(contactsModel)
                 .subscribe({ onUpdate() }, { onError(it) }))
+    }
+
+    override fun saveContactsModel(contactsModel: ContactsModel) {
+        if (saveButtonActive) {
+            contactsModel.photoUri = this.contactsModel.photoUri
+            this.contactsModel = contactsModel
+        }
     }
 
     override fun onEditSaveButtonClicked() {

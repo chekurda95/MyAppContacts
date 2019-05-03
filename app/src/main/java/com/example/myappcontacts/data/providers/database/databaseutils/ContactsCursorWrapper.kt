@@ -3,7 +3,7 @@ package com.example.myappcontacts.data.providers.database.databaseutils
 import android.database.Cursor
 import android.database.CursorWrapper
 import com.example.myappcontacts.data.dao.contacts.db.ContactsModel
-import com.example.myappcontacts.data.dao.contactsmap.MapMarkersModel
+import com.example.myappcontacts.data.dao.contactsmap.db.MapMarkersModel
 import com.example.myappcontacts.data.providers.database.databaseutils.ContactsDBSchema.*
 import java.util.*
 
@@ -27,7 +27,9 @@ class ContactsCursorWrapper(cursor: Cursor) : CursorWrapper(cursor) {
 
         return MapMarkersModel(
                 contactId = UUID.fromString(getString(getColumnIndex(ContactsTable.Cols.UUID))),
-                name = """${getString(getColumnIndex(ContactsTable.Cols.LAST_NAME)) ?: ""} ${getString(getColumnIndex(ContactsTable.Cols.FIRST_NAME)) ?: ""}""".trim(),
+                name = "${getString(getColumnIndex(ContactsTable.Cols.LAST_NAME))
+                        ?: ""} ${getString(getColumnIndex(ContactsTable.Cols.FIRST_NAME))
+                        ?: ""}".trim(),
                 photoUri = getString(getColumnIndex(ContactsTable.Cols.PHOTO_URI)) ?: "",
                 address = address)
     }

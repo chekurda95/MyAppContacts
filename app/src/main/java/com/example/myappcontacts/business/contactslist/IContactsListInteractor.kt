@@ -7,6 +7,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 
 interface IContactsListInteractor {
+
     fun addContact(): Single<UUID>
 
     fun deleteContact(contactId: UUID): Completable

@@ -11,22 +11,18 @@ import com.example.myappcontacts.data.dao.contacts.db.ContactsModel
 import kotlinx.android.synthetic.main.item_contacts_list.view.*
 import java.util.*
 
-class ContactsListRecyclerAdapter(private val onItemListener: OnItemListener, private val contactsList: MutableList<ContactsModel> = ArrayList())
-    : RecyclerView.Adapter<ContactsListRecyclerAdapter.ContactsHolder>(), ItemTouchHelperAdapter {
+internal const val TAG = "TEST"
 
-    companion object {
-        val TAG = "TEST"
-    }
+class ContactsListRecyclerAdapter(private val contactsList: MutableList<ContactsModel> = ArrayList())
+    : RecyclerView.Adapter<ContactsListRecyclerAdapter.ContactsHolder>(),
+        ItemTouchHelperAdapter {
 
-    interface OnItemListener {
-        fun onItemClick(contactId: UUID)
-
-        fun onItemSwipe(contactId: UUID)
-    }
+    var onItemClick: ((contactId: UUID) -> Unit)? = null
+    var onItemSwipe: ((contactId: UUID) -> Unit)? = null
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ContactsListRecyclerAdapter.ContactsHolder {
         val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.item_contacts_list, viewGroup, false)
-        return ContactsHolder(view)
+        return ContactsHolder(view, onItemClick!!)
     }
 
     override fun onBindViewHolder(contactsHolder: ContactsHolder, i: Int) {
@@ -44,44 +40,36 @@ class ContactsListRecyclerAdapter(private val onItemListener: OnItemListener, pr
 
     override fun onItemDismiss(position: Int) {
         val contactId = contactsList[position].contactId
-        onItemListener.onItemSwipe(contactId)
+        onItemSwipe!!(contactId)
         contactsList.removeAt(position)
         notifyDataSetChanged()
     }
 
 
-    inner class ContactsHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
-        init {
-            view.setOnClickListener(this)
-        }
-
-        lateinit var contactId: UUID
+    inner class ContactsHolder(view: View, private val onItemClick: (contactId: UUID) -> Unit)
+        : RecyclerView.ViewHolder(view){
 
         internal fun bindContact(contactsModel: ContactsModel) {
-            contactId = contactsModel.contactId
-            val firstName = contactsModel.firstName
-            val lastName = contactsModel.lastName
-            val photoStringUri = contactsModel.photoUri
+            with(contactsModel){
+                itemView.setOnClickListener { onItemClick(contactId) }
 
-            if (photoStringUri != "") {
-                itemView.contact_photo.setImageURI(photoStringUri)
-            } else {
-                itemView.contact_photo.setActualImageResource(R.drawable.ic_contact_photo)
+                if (photoUri.isBlank()) {
+                    itemView.contact_photo.setActualImageResource(R.drawable.ic_contact_photo)
+                } else {
+                    itemView.contact_photo.setImageURI(photoUri)
+                }
+
+                if (firstName.isBlank() && lastName.isBlank()) {
+                    itemView.contact_name.setText(R.string.no_name)
+                } else {
+                    val fullName = "$lastName $firstName".trim()
+                    itemView.contact_name.text = fullName
+                }
+
+                itemView.contact_have_telephone.visibility =
+                if (contactsModel.telNumber.isBlank()) ImageView.GONE
+                else ImageView.VISIBLE
             }
-
-            if (firstName == "" && lastName == "") {
-                itemView.contact_name.setText(R.string.no_name)
-            } else {
-                val fullName = """$lastName $firstName""".trim()
-                itemView.contact_name.text = fullName
-            }
-
-            if (contactsModel.telNumber == "") itemView.contact_have_telephone.visibility = ImageView.GONE
-            else itemView.contact_have_telephone.visibility = ImageView.VISIBLE
-        }
-
-        override fun onClick(v: View?) {
-            onItemListener.onItemClick(contactId)
         }
     }
 }
